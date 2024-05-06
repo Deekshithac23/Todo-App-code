@@ -3,16 +3,14 @@ const path = require('path')
 const {open} = require('sqlite')
 const sqlite3 = require('sqlite3')
 
-
 const app = express()
-app.use(express.json())
-
-const dbpath = path.join(__dirname, 'todoApplication.db')
-let db = null
 
 const format = require('date-fns/format')
 const isMatch = require('date-fns/isMatch')
 const isValid = require('date-fns/isValid')
+app.use(express.json())
+const dbpath = path.join(__dirname, 'todoApplication.db')
+let db = null
 
 const initializeDbAndServer = async () => {
   try {
@@ -83,7 +81,7 @@ app.get('/todos/', async (request, response) => {
   let getTodosQuery = ''
 
   switch (true) {
-    case hasStatus(requestQuery):
+    case hasStatus(request.query):
       if (status === 'TO DO' || status === 'IN PROGRESS' || status === 'DONE') {
         getTodosQuery = `SELECT * FROM todo WHERE status = ${status};`
         data = await db.all(getTodosQuery)
@@ -93,7 +91,7 @@ app.get('/todos/', async (request, response) => {
         response.send('Invalid Todo Status')
       }
       break
-    case hasPriority(requestQuery):
+    case hasPriority(request.query):
       if (priority === 'HIGH' || priority === 'MEDIUM' || priority === 'LOW') {
         getTodosQuery = `SELECT * FROM todo WHERE priority = ${priority};`
         data = await db.all(getTodosQuery)
@@ -103,7 +101,7 @@ app.get('/todos/', async (request, response) => {
         response.send('Invalid Todo Priority')
       }
       break
-    case hasPriorityAndStatus(requestQuery):
+    case hasPriorityAndStatus(request.query):
       if (priority === 'HIGH' || priority === 'MEDIUM' || priority === 'LOW') {
         if (
           status === 'TO DO' ||
@@ -122,12 +120,12 @@ app.get('/todos/', async (request, response) => {
         response.send('Invalid Todo Priority')
       }
       break
-    case hasSearch(requestQuery):
+    case hasSearch(request.query):
       getTodosQuery = `SELECT * FROM todo WHERE search_q LIKE '%${search_q}%';`
       data = await db.all(getTodosQuery)
       response.send(data.map(each => convertToDataResponse(each)))
       break
-    case hasCategoryAndStatus(requestQuery):
+    case hasCategoryAndStatus(request.query):
       if (
         category === 'WORK' ||
         category === 'HOME' ||
@@ -150,7 +148,7 @@ app.get('/todos/', async (request, response) => {
         response.send('Invalid Todo Category')
       }
       break
-    case hasCategory(requestQuery):
+    case hasCategory(request.query):
       if (
         category === 'WORK' ||
         category === 'HOME' ||
@@ -164,7 +162,7 @@ app.get('/todos/', async (request, response) => {
         response.send('Invalid Todo Category')
       }
       break
-    case hasCategoryAndPriority(requestQuery):
+    case hasCategoryAndPriority(request.query):
       if (
         category === 'WORK' ||
         category === 'HOME' ||
