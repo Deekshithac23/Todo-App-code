@@ -83,7 +83,7 @@ app.get('/todos/', async (request, response) => {
   switch (true) {
     case hasStatus(request.query):
       if (status === 'TO DO' || status === 'IN PROGRESS' || status === 'DONE') {
-        getTodosQuery = `SELECT * FROM todo WHERE status = ${status};`
+        getTodosQuery = `SELECT * FROM todo WHERE status = "${status}:;`
         data = await db.all(getTodosQuery)
         response.send(data.map(each => convertToDataResponse(each)))
       } else {
@@ -93,7 +93,7 @@ app.get('/todos/', async (request, response) => {
       break
     case hasPriority(request.query):
       if (priority === 'HIGH' || priority === 'MEDIUM' || priority === 'LOW') {
-        getTodosQuery = `SELECT * FROM todo WHERE priority = ${priority};`
+        getTodosQuery = `SELECT * FROM todo WHERE priority = "${priority}";`
         data = await db.all(getTodosQuery)
         response.send(data.map(each => convertToDataResponse(each)))
       } else {
