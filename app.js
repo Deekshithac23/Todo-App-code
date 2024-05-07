@@ -186,7 +186,7 @@ app.get('/todos/', async (request, response) => {
       }
       break
     default:
-      getTodosQuery = `SELECT * FROM TODO;`
+      getTodosQuery = `SELECT * FROM todo;`
       data = await db.all(getTodosQuery)
       response.send(data.map(each => convertToDataResponse(each)))
   }
