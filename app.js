@@ -194,13 +194,13 @@ app.get('/todos/', async (request, response) => {
 
 app.get('/todos/:todoId/', async (request, response) => {
   const {todoId} = request.params
-  const getTodosQuery = `SELECT * FROM todo WHERE todoId='${todoId}';`
+  const getTodosQuery = `SELECT * FROM todo WHERE id='${todoId}';`
   const dbResponse = await db.get(getTodosQuery)
   response.send(convertToDataResponse(dbResponse))
 })
 
 app.get('/agenda/', async (request, response) => {
-  const {date} = request.params
+  const {date} = request.query
   if (isMatch(date, 'yyyy-MM-dd')) {
     const newDate = format(new Date(date), 'yyyy-MM-dd')
     const getDateQuery = `SELECT * FROM todo WHERE due_date='${newDate}';`
